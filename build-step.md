@@ -36,3 +36,10 @@ export PATH="$PATH":`pwd`/depot_tools
 
 ### Links
 * http://www.slideshare.net/higebu/building-andcustomizingcoreos
+* https://chromium.googlesource.com/chromiumos/overlays/
+* https://chromium.googlesource.com/?format=HTML
+* http://www.chromium.org/chromium-os/build
+* https://www.chromium.org/developers/how-tos/build-instructions-chromeos
+* http://www.chromium.org/chromium-os/how-tos-and-troubleshooting/portage-build-faq
+* https://wiki.gentoo.org/wiki/Handbook:X86
+* 
