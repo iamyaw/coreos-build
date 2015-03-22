@@ -31,6 +31,7 @@ export PATH="$PATH":`pwd`/depot_tools
 ## Custom Overlay
 * ~~src/third_party/portage-stable/profiles/uclibc/make.defaults~~
 * src/third_party/coreos-overlay/profiles/coreos/targets/generic/make.defaults
+```
     repo diff
     project src/third_party/coreos-overlay/
     diff --git a/profiles/coreos/targets/generic/make.defaults b/profiles/coreos/targets/g
@@ -40,6 +41,7 @@ export PATH="$PATH":`pwd`/depot_tools
     @@ -1,7 +1,7 @@
     -USE="cros-debug acpi usb symlink-usr cryptsetup policykit -pam"
     +USE="cros-debug acpi usb symlink-usr cryptsetup policykit pam"
+```
 * src/third_party/coreos-overlay/profiles/coreos/targets/generic/package.use
 * ~~src/third_party/coreos-overlay/profiles/coreos/targets/sdk/make.defaults~~
 * src/third_party/portage-stable/profiles/default/linux/make.defaults
