@@ -49,7 +49,7 @@ export PATH="$PATH":`pwd`/depot_tools
 
 ## Bug fix
 
-scripts/build_packages
+* scripts/build_packages
 `# util-linux[udev] -> virtual->udev -> systemd -> util-linux`
 `break_dep_loop sys-apps/util-linux udev,systemd sys-apps/systemd cryptsetup`
 
