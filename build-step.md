@@ -47,6 +47,12 @@ export PATH="$PATH":`pwd`/depot_tools
 * src/third_party/portage-stable/profiles/default/linux/make.defaults
 * src/third_party/portage-stable/profiles/default/linux/package.use
 
+## Bug fix
+
+scripts/build_packages
+`# util-linux[udev] -> virtual->udev -> systemd -> util-linux`
+`break_dep_loop sys-apps/util-linux udev,systemd sys-apps/systemd cryptsetup`
+
 ### Links
 * http://www.slideshare.net/higebu/building-andcustomizingcoreos
 * https://chromium.googlesource.com/chromiumos/overlays/
