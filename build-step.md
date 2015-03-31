@@ -29,7 +29,7 @@ export PATH="$PATH":`pwd`/depot_tools
 * ./coreos_developer_qemu.sh -a ~/.ssh/authorized_keys -p 2223 -- -curses
 
 ## Custom Overlay
-* ~~src/third_party/portage-stable/profiles/uclibc/make.defaults~~
+* src/third_party/portage-stable/profiles/uclibc/make.defaults
 * src/third_party/coreos-overlay/profiles/coreos/targets/generic/make.defaults
 ```
     repo diff
@@ -43,8 +43,18 @@ export PATH="$PATH":`pwd`/depot_tools
     +USE="cros-debug acpi usb symlink-usr cryptsetup policykit pam"
 ```
 * src/third_party/coreos-overlay/profiles/coreos/targets/generic/package.use
-* ~~src/third_party/coreos-overlay/profiles/coreos/targets/sdk/make.defaults~~
+* ~~src/third_party/coreos-overlay/profiles/coreos/targets/sdk/make.defaults
 * src/third_party/portage-stable/profiles/default/linux/make.defaults
+```
+    project src/third_party/portage-stable/
+    diff --git a/profiles/default/linux/make.defaults b/profiles/default/linux/make.
+    index dfa4843..e52ca1b 100644
+    --- a/profiles/default/linux/make.defaults
+    +++ b/profiles/default/linux/make.defaults
+    @@ -12,7 +12,7 @@
+    -USE="berkdb crypt ipv6 ncurses nls pam readline ssl tcpd zlib"
+    +USE="berkdb crypt ipv6 ncurses nls pam readline ssl tcpd zlib kerberos"
+```
 * src/third_party/portage-stable/profiles/default/linux/package.use
 
 ## Bug fix
