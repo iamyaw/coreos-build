@@ -86,13 +86,12 @@
   core@0794005b3bf1 ~/trunk/src/scripts $ ./build_packages
 ```
 * Build Image
- * building production image
+ * building production image or dev image
 ```
   core@0794005b3bf1 ~/trunk/src/scripts $ ./build_image prod --group production
   core@0794005b3bf1 ~/trunk/src/scripts $ image_to_vm.sh
   core@0794005b3bf1 ~/trunk/src/scripts $ ./image_to_vm.sh --from=../build/images/amd64-usr/developer-602.0.0+2015-02-24-1954-a1 --board=amd64-usr --format=virtualbox
 ```
-  * building dev image
 ```
   core@0794005b3bf1 ~/trunk/src/scripts $./build_image --noenable_rootfs_verification dev
 ```
