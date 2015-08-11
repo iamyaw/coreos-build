@@ -56,6 +56,11 @@
   core@0a829090297a ~ $ git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
   core@0a829090297a ~ $ export PATH="$PATH":`pwd`/depot_tools
 ```
+** Edit .bashrc of the user core
+```
+  # /etc/skel/.bashrc
+  export PATH="$PATH":$HOME/depot_tools
+```
 * Repo Sync
 ```
   core@0a829090297a ~/core $ mkdir coreos; cd coreos
@@ -63,7 +68,9 @@
   core@0a829090297a ~/coreos $ repo sync
 ```
 * CoreOS SDK
+** The CoreOS SDK downloads and unpack the ChromeOS, which is based on the Gentoo Linux. "Unpacking STAGE3..."
 ```
+ core@0794005b3bf1 ~/coreos $ ./chromite/bin/cros_sdk
 
 ```
 * Build Package
