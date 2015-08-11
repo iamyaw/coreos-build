@@ -8,15 +8,17 @@
 ### Run Gentoo Docker
 * Run the gentoo/portage as the data volume docker and run the gentoo/stage3-amd64 docker with the volume /usr/portage
 * Commit the docker as the new gentoo:iamyaw image
-* In order to run coreos SDK, /sys/fs/cgroup must exists so that the docker must be run as privileged mode with binding /sys/fs/cgroup. As binding /sys/fs/cgroup, the only readonly mode works. Use '-v /sys/fs/cgroup:/sys/fs/cgroup:ro'.
+ * In order to run coreos SDK, /sys/fs/cgroup must exists so that the docker must be run as privileged mode with binding /sys/fs/cgroup. As binding /sys/fs/cgroup, the only readonly mode works. Use '-v /sys/fs/cgroup:/sys/fs/cgroup:ro'.
 ```
   core@ctestdocker002 ~ $ docker create -v /usr/portage --name gentoo-portage gentoo/portage
   core@ctestdocker002 ~ $ docker run -ti --name gentoo-stage3 --volumes-from gentoo-portage gentoo/stage3-amd64
   core@ctestdocker002 ~ $ docker commit gentoo-stage3 gentoo:iamyaw 
   core@ctestdocker002 ~ $ docker run -ti --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name gentoo-iamyaw --volumes-from gentoo-portage gentoo:iamyaw
-```
-```
   sh-4.3# ls /usr/portage
+```
+ * Also the CoreOS SDK requires fuse module too. Execute 'sudo modprobe fuse'
+```
+  core@ctestdocker002 ~ $ sudo modprobe -v fuse
 ```
 
 ### Create the working user 'core'
@@ -30,7 +32,7 @@
 
 ### Installing some tools into the gentoo docker
 * Use emerge tool to install something in the Gentoo linux
-* The Gentoo linux does not have a package tool. Instead, should compile from the source. So it is called as 'merging'.
+ * The Gentoo linux does not have a package tool. Instead, should compile from the source. So it is called as 'merging'.
 ```
   sh-4.3# ls -d /usr/portage/*/sudo
   /usr/portage/app-admin/sudo
@@ -42,6 +44,7 @@
   sh-4.3# emerge dev-vcs/git
   sh-4.3# emerge net-misc/curl
 ```
+* Periodically commit the running docker
 ```
   core@ctestdocker002 ~ $ docker commit gentoo-iamyaw gentoo:iamyaw
 ```
@@ -56,7 +59,7 @@
   core@0a829090297a ~ $ git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
   core@0a829090297a ~ $ export PATH="$PATH":`pwd`/depot_tools
 ```
-** Edit .bashrc of the user core
+ * Edit .bashrc of the user core
 ```
   # /etc/skel/.bashrc
   export PATH="$PATH":$HOME/depot_tools
@@ -68,10 +71,19 @@
   core@0a829090297a ~/coreos $ repo sync
 ```
 * CoreOS SDK
-** The CoreOS SDK downloads and unpack the ChromeOS, which is based on the Gentoo Linux. "Unpacking STAGE3..."
+ * The CoreOS SDK downloads and unpack the ChromeOS, which is based on the Gentoo Linux. "Unpacking STAGE3..."
+ * The 'set_shared_user_passwd.sh' is important because when it is the only way to login into the build CoreOS image.
+ * Use '4un4mecore' as the password
 ```
  core@0794005b3bf1 ~/coreos $ ./chromite/bin/cros_sdk
-
+ core@0794005b3bf1 ~/trunk/src/scripts $ ./set_shared_user_password.sh
+ Enter password for shared user account: Password set in /etc/shared_user_passwd.txt
 ```
 * Build Package
+```
+  core@0794005b3bf1 ~/trunk/src/scripts $ echo "amd64-usr" > .default_board
+  core@0794005b3bf1 ~/trunk/src/scripts $ ./setup_board
+  core@0794005b3bf1 ~/trunk/src/scripts $ ./build_packages
+```
+
 
