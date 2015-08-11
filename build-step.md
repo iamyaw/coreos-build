@@ -43,7 +43,7 @@
     +USE="cros-debug acpi usb symlink-usr cryptsetup policykit pam"
 ```
 * src/third_party/coreos-overlay/profiles/coreos/targets/generic/package.use
-* ~~src/third_party/coreos-overlay/profiles/coreos/targets/sdk/make.defaults
+* src/third_party/coreos-overlay/profiles/coreos/targets/sdk/make.defaults
 * src/third_party/portage-stable/profiles/default/linux/make.defaults
 ```
     project src/third_party/portage-stable/
