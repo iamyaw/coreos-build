@@ -9,10 +9,10 @@
 * run the gentoo/portage as the data volume docker and run the gentoo/stage3-amd64 docker with the volume /usr/portage
 * commit the docker as the new gentoo:iamyaw image
 ```
-  core@ctestdocker002 $ docker create -v /usr/portage --name gentoo-portage gentoo/portage
-  core@ctestdocker002 $ docker run -ti --name gentoo-stage3 --volumes-from gentoo-portage gentoo/stage3-amd64
-  core@ctestdocker002 $ docker commit gentoo-stage3 gentoo:iamyaw 
-  core@ctestdocker002 $ docker run -ti --name gentoo-iamyaw --volumes-from gentoo-portage gentoo:iamyaw
+  core@ctestdocker002 ~ $ docker create -v /usr/portage --name gentoo-portage gentoo/portage
+  core@ctestdocker002 ~ $ docker run -ti --name gentoo-stage3 --volumes-from gentoo-portage gentoo/stage3-amd64
+  core@ctestdocker002 ~ $ docker commit gentoo-stage3 gentoo:iamyaw 
+  core@ctestdocker002 ~ $ docker run -ti --name gentoo-iamyaw --volumes-from gentoo-portage gentoo:iamyaw
 ```
 ```
   sh-4.3# ls /usr/portage
@@ -29,14 +29,32 @@
 
 ### Installing some tools into the gentoo docker
 * use emerge tool to install something in the Gentoo linux
+* the Gentoo linux does not have a package tool. Instead, should compile from the source. So it is called as 'merging'.
 ```
   sh-4.3# ls -d /usr/portage/*/sudo
   /usr/portage/app-admin/sudo
-  sh-4.3# emerge install app-admin/sudo
+  sh-4.3# emerge app-admin/sudo
   sh-4.3# ls -d /usr/portage/*/vim
   /usr/portage/app-editors/vim  /usr/portage/licenses/vim
-  sh-4.3# emerge install app-editors/vim
+  sh-4.3# emerge app-editors/vim
+  ...
+  sh-4.3# emerge dev-vcs/git
+  sh-4.3# emerge net-misc/curl
 ```
 ```
-  core@ctestdocker002 $ docker commit gentoo-iamyaw gentoo:iamyaw
+  core@ctestdocker002 ~ $ docker commit gentoo-iamyaw gentoo:iamyaw
 ```
+
+### Prepare CoreOS build environment
+* Refer to build steps in https://github.com/iamyaw/coreos-build/blob/master/build-step.md
+```
+  sh-4.3# sudo su - core
+  core@0a829090297a ~ $ git config --global user.email "iamyaw@gmail.com"
+  core@0a829090297a ~ $ git config --global user.name "iamyaw"
+  core@0a829090297a ~ $ git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+  core@0a829090297a ~ $ export PATH="$PATH":`pwd`/depot_tools
+  core@0a829090297a ~/core $ mkdir coreos; cd coreos
+  core@0a829090297a ~/coreos $ repo init -u https://github.com/coreos/manifest.git -g minilayout --repo-url https://chromium.googlesource.com/external/repo.git
+  core@0a829090297a ~/coreos $ repo sync
+```
+
