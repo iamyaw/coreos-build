@@ -2,7 +2,7 @@
 * git config --global user.email "you@example.com"
 * git config --global user.name "Your Name"
 * git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git<br/>
-export PATH="$PATH":`pwd`/depot_tools
+export PATH="$PATH":\`pwd\`/depot_tools
 
 ### Repo Sync
 * mkdir coreos; cd coreos
