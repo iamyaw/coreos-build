@@ -1,12 +1,12 @@
 ### ChromeOS depot_tools
 * git config --global user.email "you@example.com"
 * git config --global user.name "Your Name"
-* git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git
+* git clone https://chromium.googlesource.com/chromium/tools/depot_tools.git<br/>
 export PATH="$PATH":`pwd`/depot_tools
 
 ### Repo Sync
 * mkdir coreos; cd coreos
-* repo init -u https://github.com/coreos/manifest.git -g minilayout --repo-url https://chromium.googlesource.com/external/repo.git
+* repo init -u https://github.com/coreos/manifest.git -g minilayout --repo-url<br/> https://chromium.googlesource.com/external/repo.git
 * repo sync
 
 ### CoreOS SDK
