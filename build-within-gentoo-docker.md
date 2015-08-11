@@ -102,9 +102,9 @@
 * Change coreos-overlay in order to build the custom CoreOS image. e.g. including Kerberos
 * PAM module
  * Edit the file 'src/third_party/coreos-overlay/profiles/coreos/targets/generic/make.defaults'
- * Notice that editing it outside cros_sdk.
+ * Notice that it is outside 'cros_sdk'
  * Related files :
-  * src/third_party/portage-stable/profiles/uclibc/make.defaults
+   * src/third_party/portage-stable/profiles/uclibc/make.defaults
 ```
   core@0794005b3bf1 ~/coreos $ repo diff
   
@@ -126,8 +126,9 @@
 * Kerberos module
  * Edit the file 'src/third_party/portage-stable/profiles/default/linux/make.defaults'
  * Related files :
-  * src/third_party/coreos-overlay/profiles/coreos/targets/generic/package.use
-  * src/third_party/coreos-overlay/profiles/coreos/targets/sdk/make.defaults
+   * src/third_party/coreos-overlay/profiles/coreos/targets/generic/package.use
+   * src/third_party/coreos-overlay/profiles/coreos/targets/sdk/make.defaults
+   * src/third_party/portage-stable/profiles/default/linux/package.use
 ```
   core@0794005b3bf1 ~/coreos $ repo diff
 
@@ -146,3 +147,9 @@
    # make sure toolchain has sane defaults <tooclhain@gentoo.org>
    USE="${USE} fortran openmp"
 ```
+* Build Package
+ * Notice that it is inside 'cros_sdk'
+```
+  core@0794005b3bf1 ~/trunk/src/scripts $ ./build_packages
+```
+
