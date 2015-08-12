@@ -9,11 +9,12 @@
 * Run the gentoo/portage as the data volume docker and run the gentoo/stage3-amd64 docker with the volume /usr/portage
 * Commit the docker as the new gentoo:iamyaw image
  * In order to run coreos SDK, /sys/fs/cgroup must exists so that the docker must be run as privileged mode with binding /sys/fs/cgroup. As binding /sys/fs/cgroup, the only readonly mode works. Use '-v /sys/fs/cgroup:/sys/fs/cgroup:ro'.
+ * mount host '/home/core/gentoo_home_core' to docker '/home/core' 
 ```
   core@ctestdocker002 ~ $ docker create -v /usr/portage --name gentoo-portage gentoo/portage
-  core@ctestdocker002 ~ $ docker run -ti --name gentoo-stage3 --volumes-from gentoo-portage gentoo/stage3-amd64
+  core@ctestdocker002 ~ $ docker run -ti --name gentoo-stage3 --volumes-from gentoo-portage -v /home/core/gentoo_home_core:/home/core gentoo/stage3-amd64
   core@ctestdocker002 ~ $ docker commit gentoo-stage3 gentoo:iamyaw 
-  core@ctestdocker002 ~ $ docker run -ti --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro --name gentoo-iamyaw --volumes-from gentoo-portage gentoo:iamyaw
+  core@ctestdocker002 ~ $ docker run -ti --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /home/core/gentoo_home_core:/home/core --name gentoo-iamyaw --volumes-from gentoo-portage gentoo:iamyaw
   sh-4.3# ls /usr/portage
 ```
  * Also the CoreOS SDK requires fuse module too. Execute 'sudo modprobe fuse'
@@ -27,7 +28,8 @@
  * The user core also belongs to wheel group for sudo
 ```
   sh-4.3# groupadd -g 500 core
-  sh-4.3# useradd -m -u 500 -g 500 -G wheel core
+  sh-4.3# useradd -u 500 -g 500 -G wheel core
+  sh-4.3# cp /etc/skel/.bashrc /etc/skel/.bash_profile /home/core
 ```
 
 ### Installing some tools into the gentoo docker
