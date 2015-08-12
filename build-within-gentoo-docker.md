@@ -14,7 +14,7 @@
   core@ctestdocker002 ~ $ docker create -v /usr/portage --name gentoo-portage gentoo/portage
   core@ctestdocker002 ~ $ docker run -ti --name gentoo-stage3 --volumes-from gentoo-portage -v /home/core/gentoo_home_core:/home/core gentoo/stage3-amd64
   core@ctestdocker002 ~ $ docker commit gentoo-stage3 gentoo:iamyaw 
-  core@ctestdocker002 ~ $ docker run -ti --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /home/core/gentoo_home_core:/home/core --name gentoo-iamyaw --volumes-from gentoo-portage gentoo:iamyaw
+  core@ctestdocker002 ~ $ docker run -ti --privileged -v /sys/fs/cgroup:/sys/fs/cgroup:ro -v /home/core/gentoo_home_core:/home/core --name gentoo-iamyaw gentoo:iamyaw
   sh-4.3# ls /usr/portage
 ```
  * Also the CoreOS SDK requires fuse module too. Execute 'sudo modprobe fuse'
