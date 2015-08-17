@@ -81,27 +81,6 @@
  core@0794005b3bf1 ~/trunk/src/scripts $ ./set_shared_user_password.sh
  Enter password for shared user account: Password set in /etc/shared_user_passwd.txt
 ```
-* Build Package
-```
-  core@0794005b3bf1 ~/trunk/src/scripts $ echo "amd64-usr" > .default_board
-  core@0794005b3bf1 ~/trunk/src/scripts $ ./setup_board
-  core@0794005b3bf1 ~/trunk/src/scripts $ ./build_packages
-```
-* Build Image
- * building production image or dev image
-```
-  core@0794005b3bf1 ~/trunk/src/scripts $ ./build_image prod --group production
-  core@0794005b3bf1 ~/trunk/src/scripts $ image_to_vm.sh
-  core@0794005b3bf1 ~/trunk/src/scripts $ ./image_to_vm.sh --from=../build/images/amd64-usr/developer-602.0.0+2015-02-24-1954-a1 --board=amd64-usr --format=virtualbox
-```
-```
-  core@0794005b3bf1 ~/trunk/src/scripts $./build_image --noenable_rootfs_verification dev
-```
-* qemu
-```
-  core@0794005b3bf1 ~/trunk/src/scripts $ ./coreos_developer_qemu.sh -curses
-  core@0794005b3bf1 ~/trunk/src/scripts $ ./coreos_developer_qemu.sh -a ~/.ssh/authorized_keys -p 2223 -- -curses
-```
 
 ### Custom Overlay
 * Change coreos-overlay in order to build the custom CoreOS image. e.g. including Kerberos
@@ -152,13 +131,9 @@
    # make sure toolchain has sane defaults <tooclhain@gentoo.org>
    USE="${USE} fortran openmp"
 ```
-* Build Package
- * Notice that it is inside 'cros_sdk'
-```
-  core@0794005b3bf1 ~/trunk/src/scripts $ ./build_packages
-```
 
-* Build Image
+### Build Image
+* Modify something (some build script files) to make it work correctly inside the docker.
  * Edit 'src/script/build_library/grub_install.sh' because the result of 'losetup --partscan' cannot be used inside the docker.
 ```
 core@00ed3eaaa2fd ~/coreos $ diff src/scripts/build_library/grub_install.sh*
@@ -247,8 +222,31 @@ core@00ed3eaaa2fd ~/coreos $ diff src/scripts/build_library/grub_install.sh*
 ---
 >         sudo dd bs=448 count=1 if="${LOOP_DEV}" \
 ```
- * Build a production image 
+
 ```
   core@0794005b3bf1 ~/trunk/src/scripts $ ./build_image prod --group productionimage_to_vm.sh
   core@0794005b3bf1 ~/trunk/src/scripts $./image_to_vm.sh --from=../build/images/amd64-usr/developer-602.0.0+2015-02-24-1954-a1 --board=amd64-usr --format=virtualbox
+```
+
+* Build Package
+ * Notice that it is inside 'cros_sdk'
+```
+  core@0794005b3bf1 ~/trunk/src/scripts $ echo "amd64-usr" > .default_board
+  core@0794005b3bf1 ~/trunk/src/scripts $ ./setup_board
+  core@0794005b3bf1 ~/trunk/src/scripts $ ./build_packages
+```
+* Build Image
+ * building production image or dev image
+```
+  core@0794005b3bf1 ~/trunk/src/scripts $ ./build_image prod --group production
+  core@0794005b3bf1 ~/trunk/src/scripts $ image_to_vm.sh
+  core@0794005b3bf1 ~/trunk/src/scripts $ ./image_to_vm.sh --from=../build/images/amd64-usr/developer-602.0.0+2015-02-24-1954-a1 --board=amd64-usr --format=virtualbox
+```
+```
+  core@0794005b3bf1 ~/trunk/src/scripts $./build_image --noenable_rootfs_verification dev
+```
+* qemu
+```
+  core@0794005b3bf1 ~/trunk/src/scripts $ ./coreos_developer_qemu.sh -curses
+  core@0794005b3bf1 ~/trunk/src/scripts $ ./coreos_developer_qemu.sh -a ~/.ssh/authorized_keys -p 2223 -- -curses
 ```
