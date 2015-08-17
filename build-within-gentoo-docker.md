@@ -132,9 +132,8 @@
    USE="${USE} fortran openmp"
 ```
 
-### Build Image
-* Modify something (some build script files) to make it work correctly inside the docker.
- * Edit 'src/script/build_library/grub_install.sh' because the result of 'losetup --partscan' cannot be used inside the docker.
+### Build CoreOS image
+* Edit 'src/script/build_library/grub_install.sh' because the result of 'losetup --partscan' cannot be used inside the docker.
 ```
 core@00ed3eaaa2fd ~/coreos $ diff src/scripts/build_library/grub_install.sh*
 64,66c64
@@ -221,11 +220,6 @@ core@00ed3eaaa2fd ~/coreos $ diff src/scripts/build_library/grub_install.sh*
 <         sudo dd bs=448 count=1 if="${LOOP_DEV0}" \
 ---
 >         sudo dd bs=448 count=1 if="${LOOP_DEV}" \
-```
-
-```
-  core@0794005b3bf1 ~/trunk/src/scripts $ ./build_image prod --group productionimage_to_vm.sh
-  core@0794005b3bf1 ~/trunk/src/scripts $./image_to_vm.sh --from=../build/images/amd64-usr/developer-602.0.0+2015-02-24-1954-a1 --board=amd64-usr --format=virtualbox
 ```
 
 * Build Package
