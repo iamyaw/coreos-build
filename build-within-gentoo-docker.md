@@ -158,3 +158,97 @@
   core@0794005b3bf1 ~/trunk/src/scripts $ ./build_packages
 ```
 
+* Build Image
+ * Edit 'src/script/build_library/grub_install.sh' because the result of 'losetup --partscan' cannot be used inside the docker.
+```
+core@00ed3eaaa2fd ~/coreos $ diff src/scripts/build_library/grub_install.sh*
+64,66c64
+< # LOOP_DEV=
+< LOOP_DEV0=
+< LOOP_DEV1=
+---
+> LOOP_DEV=
+75,82c73,74
+< #     if [[ -b "${LOOP_DEV}" ]]; then
+< #         sudo losetup --detach "${LOOP_DEV}"
+< #     fi
+<     if [[ -b "${LOOP_DEV1}" ]]; then
+<         sudo losetup --detach "${LOOP_DEV0}"
+<     fi
+<     if [[ -b "${LOOP_DEV0}" ]]; then
+<         sudo losetup --detach "${LOOP_DEV1}"
+---
+>     if [[ -b "${LOOP_DEV}" ]]; then
+>         sudo losetup --detach "${LOOP_DEV}"
+91,94c83
+< # LOOP_DEV=$(sudo losetup --find --show --partscan "${FLAGS_disk_image}")
+< LOOP_DEV0=$(sudo losetup --find --show "${FLAGS_disk_image}")
+< PART1_OFFSET=`expr $(partx -gn 1 -o START "${FLAGS_disk_image}") \* 512`
+< LOOP_DEV1=$(sudo losetup --find --show --offset ${PART1_OFFSET} ${LOOP_DEV0})
+---
+> LOOP_DEV=$(sudo losetup --find --show --partscan "${FLAGS_disk_image}")
+97,113c86,102
+< # # work around slow/buggy udev, make sure the node is there before mounting
+< # if [[ ! -b "${LOOP_DEV}p1" ]]; then
+< #     # sleep a little just in case udev is ok but just not finished yet
+< #     warn "loopback device node ${LOOP_DEV}p1 missing, waiting on udev..."
+< #     sleep 0.5
+< #     for (( i=0; i<5; i++ )); do
+< #         if [[ -b "${LOOP_DEV}p1" ]]; then
+< #             break
+< #         fi
+< #         warn "looback device node still ${LOOP_DEV}p1 missing, reprobing..."
+< #         sudo blockdev --rereadpt ${LOOP_DEV}
+< #         sleep 0.5
+< #     done
+< #     if [[ ! -b "${LOOP_DEV}p1" ]]; then
+< #         failboat "${LOOP_DEV}p1 where art thou? udev has forsaken us!"
+< #     fi
+< # fi
+---
+> # work around slow/buggy udev, make sure the node is there before mounting
+> if [[ ! -b "${LOOP_DEV}p1" ]]; then
+>     # sleep a little just in case udev is ok but just not finished yet
+>     warn "loopback device node ${LOOP_DEV}p1 missing, waiting on udev..."
+>     sleep 0.5
+>     for (( i=0; i<5; i++ )); do
+>         if [[ -b "${LOOP_DEV}p1" ]]; then
+>             break
+>         fi
+>         warn "looback device node still ${LOOP_DEV}p1 missing, reprobing..."
+>         sudo blockdev --rereadpt ${LOOP_DEV}
+>         sleep 0.5
+>     done
+>     if [[ ! -b "${LOOP_DEV}p1" ]]; then
+>         failboat "${LOOP_DEV}p1 where art thou? udev has forsaken us!"
+>     fi
+> fi
+115,116c104
+< # sudo mount -t vfat "${LOOP_DEV}p1" "${ESP_DIR}"
+< sudo mount -t vfat "${LOOP_DEV1}" "${ESP_DIR}"
+---
+> sudo mount -t vfat "${LOOP_DEV}p1" "${ESP_DIR}"
+129,130c117
+< # ESP_FSID=$(sudo grub-probe -t fs_uuid -d "${LOOP_DEV}p1")
+< ESP_FSID=$(sudo grub-probe -t fs_uuid -d "${LOOP_DEV1}")
+---
+> ESP_FSID=$(sudo grub-probe -t fs_uuid -d "${LOOP_DEV}p1")
+174,175d160
+< #         sudo grub-bios-setup --device-map=/dev/null \
+< #             --directory="${ESP_DIR}/${GRUB_DIR}" "${LOOP_DEV}"
+177c162
+<             --directory="${ESP_DIR}/${GRUB_DIR}" "${LOOP_DEV0}"
+---
+>             --directory="${ESP_DIR}/${GRUB_DIR}" "${LOOP_DEV}"
+180,182c165
+< #         sudo dd bs=448 count=1 if="${LOOP_DEV}" \
+< #             of="${ESP_DIR}/${GRUB_DIR}/mbr.bin"
+<         sudo dd bs=448 count=1 if="${LOOP_DEV0}" \
+---
+>         sudo dd bs=448 count=1 if="${LOOP_DEV}" \
+```
+ * Build a production image 
+```
+  core@0794005b3bf1 ~/trunk/src/scripts $ ./build_image prod --group productionimage_to_vm.sh
+  core@0794005b3bf1 ~/trunk/src/scripts $./image_to_vm.sh --from=../build/images/amd64-usr/developer-602.0.0+2015-02-24-1954-a1 --board=amd64-usr --format=virtualbox
+```
